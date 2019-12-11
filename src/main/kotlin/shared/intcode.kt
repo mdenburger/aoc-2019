@@ -19,25 +19,6 @@ class IntCode constructor(fileName: String) {
                 .mapIndexed { index, number -> code[index.toLong()] = number.toLong() }
     }
 
-    private fun mode(number: Int) = modes.getOrDefault(number - 1, 0)
-
-    private fun lookup(address: Long, mode: Int): Long {
-        return when (mode) {
-            0 -> code[code[address] ?: 0] ?: 0
-            1 -> code[address] ?: 0
-            2 -> code[relativeBase + (code[address] ?: 0)] ?: 0
-            else -> throw Error("unknown mode for address $address: $mode")
-        }
-    }
-
-    private fun parameter(number: Int) = lookup(instructionPointer + number, mode(number))
-
-    private fun store(parameter: Int, value: Long) = when (mode(parameter)) {
-        0 -> code[code[instructionPointer + parameter] ?: 0L] = value
-        2 -> code[relativeBase + (code[instructionPointer + parameter] ?: 0L)] = value
-        else -> throw Error("unknown mode for storage of param $parameter: $value")
-    }
-
     suspend fun run(input: ReceiveChannel<Long>, output: SendChannel<Long>) {
         while (!done) {
             val instruction = code[instructionPointer].toString()
@@ -110,4 +91,23 @@ class IntCode constructor(fileName: String) {
             }
         }
     }
+
+    private fun store(parameter: Int, value: Long) = when (mode(parameter)) {
+        0 -> code[code[instructionPointer + parameter] ?: 0L] = value
+        2 -> code[relativeBase + (code[instructionPointer + parameter] ?: 0L)] = value
+        else -> throw Error("unknown mode for storage of param $parameter: $value")
+    }
+
+    private fun parameter(number: Int) = lookup(instructionPointer + number, mode(number))
+
+    private fun lookup(address: Long, mode: Int): Long {
+        return when (mode) {
+            0 -> code[code[address] ?: 0] ?: 0
+            1 -> code[address] ?: 0
+            2 -> code[relativeBase + (code[address] ?: 0)] ?: 0
+            else -> throw Error("unknown mode for address $address: $mode")
+        }
+    }
+
+    private fun mode(number: Int) = modes.getOrDefault(number - 1, 0)
 }
