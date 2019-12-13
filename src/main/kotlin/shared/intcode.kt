@@ -19,6 +19,10 @@ class IntCode constructor(fileName: String) {
                 .mapIndexed { index, number -> code[index.toLong()] = number.toLong() }
     }
 
+    operator fun set(address: Long, value: Long) {
+        code[address] = value
+    }
+
     suspend fun run(input: ReceiveChannel<Long>, output: SendChannel<Long>) {
         while (!done) {
             val instruction = code[instructionPointer].toString()
