@@ -7,6 +7,7 @@ val BASE_PATTERN = intArrayOf(0, 1, 0, -1)
 
 fun main() {
     part1()
+    part2()
 }
 
 fun part1() {
@@ -50,3 +51,47 @@ fun fftSequence(index: Int) = sequence {
 }.iterator()
 
 fun Int.onesDigit() = this.absoluteValue % 10
+
+fun part2() {
+    val numbers = readNumbers(File("src/main/kotlin/day16/day16-input.txt").readText())
+    val answer2 = calculateMessage(numbers)
+    println("Answer 2: $answer2")
+}
+
+fun calculateMessage(numbers: IntArray): String {
+    val times = 10000
+    val messageOffset = numbers.copyOfRange(0, 7).joinToString("").toInt()
+
+    if (messageOffset < numbers.size * times / 2) {
+        throw NotImplementedError("Can't do message offsets in the first half")
+    }
+
+    val end = numbers.repeat(times).subList(messageOffset, numbers.size * times).toIntArray()
+    val result = transformFast(end, 100)
+
+    return result.copyOfRange(0, 8).joinToString("")
+}
+
+fun IntArray.repeat(times: Int): List<Int> = sequence {
+    repeat(times) {
+        yieldAll(asSequence())
+    }
+}.toList()
+
+fun transformFast(numbers: IntArray, times: Int): IntArray {
+    var current = numbers;
+
+    repeat(times) {
+        val next = IntArray(current.size)
+
+        next[next.lastIndex] = current.last()
+
+        for (index in current.lastIndex - 1 downTo 0) {
+            next[index] = (current[index] + next[index + 1]) % 10
+        }
+
+        current = next
+    }
+
+    return current
+}
