@@ -20,14 +20,14 @@ fun main() {
 }
 
 private fun part1() {
-    val program = IntCode("src/main/kotlin/day13/day13-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day13/day13-input.txt")
     val grid = hashMapOf<Point, Tile>()
     runGame(program, grid)
     println("Answer 1: " + grid.values.filter { it == Tile.BLOCK }.count())
 }
 
 private fun part2() {
-    val program = IntCode("src/main/kotlin/day13/day13-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day13/day13-input.txt")
     val grid = hashMapOf<Point, Tile>()
     program[0] = 2  // play for free
     val score = runGame(program, grid)

@@ -24,7 +24,7 @@ fun main() {
 }
 
 fun part1() {
-    val program = IntCode("src/main/kotlin/day17/day17-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day17/day17-input.txt")
     val grid = readGrid(program)
 
     val width = grid.keys.map { it.x }.max()!! + 1
@@ -80,7 +80,7 @@ suspend fun collectGrid(output: Channel<Long>): MutableMap<Point, Char> {
 }
 
 fun part2() {
-    val program = IntCode("src/main/kotlin/day17/day17-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day17/day17-input.txt")
 
     program.set(0, 2)
 

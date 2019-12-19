@@ -42,7 +42,7 @@ val walkable = hashSetOf<Point>()
 val walls = hashSetOf<Point>()
 
 fun main() {
-    val program = IntCode("src/main/kotlin/day15/day15-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day15/day15-input.txt")
     val todo = mutableListOf<Point>()
 
     todo.add(START)

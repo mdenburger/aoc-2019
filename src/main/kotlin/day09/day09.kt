@@ -11,7 +11,7 @@ fun main() {
 }
 
 private fun run(inputValue: Long): Long {
-    val program = IntCode("src/main/kotlin/day09/day09-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day09/day09-input.txt")
 
     return runBlocking {
         val input = Channel<Long>(1)

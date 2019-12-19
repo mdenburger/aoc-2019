@@ -46,7 +46,7 @@ fun main() {
 }
 
 fun paint(initialColor: Long): HashMap<Point, Long> {
-    val program = IntCode("src/main/kotlin/day11/day11-input.txt")
+    val program = IntCode.fromFile("src/main/kotlin/day11/day11-input.txt")
 
     val grid = hashMapOf<Point, Long>()
     val robot = Robot()

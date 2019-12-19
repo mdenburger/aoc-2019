@@ -4,23 +4,21 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import java.io.File
 
-class IntCode constructor(fileName: String) {
-    private val code = hashMapOf<Long, Long>()
+class IntCode constructor(val code: MutableMap<Long, Long>) {
     private var instructionPointer = 0L
     private var relativeBase = 0L
     private val modes = hashMapOf<Int, Int>()
     private var done = false
 
-    init {
-        File(fileName)
-                .readText()
-                .trim()
-                .split(",")
-                .mapIndexed { index, number -> code[index.toLong()] = number.toLong() }
-    }
-
     operator fun set(address: Long, value: Long) {
         code[address] = value
+    }
+
+    fun copyOf(): IntCode {
+        val copy = IntCode(code.toMutableMap())
+        copy.relativeBase = relativeBase
+        copy.done = done
+        return copy
     }
 
     suspend fun run(input: ReceiveChannel<Long>, output: SendChannel<Long>) {
@@ -114,4 +112,16 @@ class IntCode constructor(fileName: String) {
     }
 
     private fun mode(number: Int) = modes.getOrDefault(number - 1, 0)
+
+    companion object Factory {
+        fun fromFile(fileName: String): IntCode {
+            val code = hashMapOf<Long, Long>()
+            File(fileName)
+                    .readText()
+                    .trim()
+                    .split(",")
+                    .mapIndexed { index, number -> code[index.toLong()] = number.toLong() }
+            return IntCode(code)
+        }
+    }
 }
